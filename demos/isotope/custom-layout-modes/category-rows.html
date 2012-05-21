@@ -859,19 +859,25 @@
     });
     
     $container.on('click', '.element', function(e) {
-        var $tar = $(e.target);
+        var $tar = $(e.target),
+            $clone;
         if (! $tar.hasClass('element')){
             $tar = $tar.parents('.element').first();
         }
-        $collector.isotope( 'insert', $tar );
+        $clone = $tar.clone();
+        $container.isotope( 'remove', $tar );
+        $collector.isotope( 'insert', $clone );
     });
     
     $collector.on('click', '.element', function(e) {
-        var $tar = $(e.target);
+        var $tar = $(e.target),
+            $clone;
         if (! $tar.hasClass('element')){
             $tar = $tar.parents('.element').first();
         }
-        $container.isotope( 'insert', $tar );
+        $clone = $tar.clone();
+        $collector.isotope( 'remove', $tar );
+        $container.isotope( 'insert', $clone );
     });
 
     
