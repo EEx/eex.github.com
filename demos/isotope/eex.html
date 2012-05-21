@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  
+  <meta charset="utf-8" />
+  <title>EEx Demo</title>
+  
+  <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- scripts at bottom of page -->
+
+  <style>
+    
+    #eex-container {
+        border: thin solid #ccc;
+    }
+    
+    #eex-collector {
+        border: thin solid #ccc;
+        margin: 20px 0;
+    }
+    
+    .eex-element {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        font-size: 1.3em;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .eex-element p {
+        line-height: 100px;
+    }
+    
+    .electric {
+        background: #a00;
+    }
+    
+    .water {
+        background: #3cf;
+    }
+    
+  </style>
+  
+</head>
+<body class="demos ">
+  
+  
+  <section id="content">
+    
+      <h1>EEx Demo</h1>
+    
+
+      <section id="copy1">
+        <p>Select elements from the available options to add to your selections.</p>
+  </section>
+  
+
+  <h1>Your Selections</h1>
+  <div id="eex-collector" class="clearfix">
+    
+  </div> <!-- #container -->
+  
+  <h1>Available Options</h1>
+  
+  <section id="copy">
+        <p>Filtering hides and reveals item elements.</p>
+  </section>
+  <section id="options" class="clearfix">
+    
+    
+      <h3>Filters</h3>
+
+      <ul id="filters" class="option-set clearfix" data-option-key="filter">
+        <li><a href="#filter" data-option-value="*" class="selected">show all</a></li>
+        <li><a href="#filter" data-option-value=".electric">electric</a></li>
+        <li><a href="#filter" data-option-value=".water">water</a></li>
+      </ul>
+
+
+  </section> <!-- #options -->
+  
+  <div id="eex-container" class="clearfix">
+    <div class="eex-element electric">
+        <p>Loom</p>
+    </div>
+    <div class="eex-element electric">
+        <p>Pressing</p>
+    </div>
+    <div class="eex-element electric">
+        <p>Cut & Sew</p>
+    </div>
+    
+    <div class="eex-element water">
+        <p>Dyeing</p>
+    </div>
+    <div class="eex-element water">
+        <p>Washing</p>
+    </div>
+  </div> <!-- #container -->
+  
+  <script src="js/jquery-1.7.1.min.js"></script>
+  <script src="jquery.isotope.min.js"></script>
+  <script>
+    $(function(){
+      
+      var $container = $('#eex-container'),
+        $collector = $('#eex-collector');
+        
+        
+        $container.on('click', '.eex-element', function(e) {
+        var $tar = $(e.target),
+            $clone;
+        if (! $tar.hasClass('eex-element')){
+            $tar = $tar.parents('.eex-element').first();
+        }
+        $clone = $tar.clone();
+        $container.isotope( 'remove', $tar );
+        $collector.isotope( 'insert', $clone );
+    });
+    
+    $collector.on('click', '.eex-element', function(e) {
+        var $tar = $(e.target),
+            $clone;
+        if (! $tar.hasClass('eex-element')){
+            $tar = $tar.parents('.eex-element').first();
+        }
+        $clone = $tar.clone();
+        $collector.isotope( 'remove', $tar );
+        $container.isotope( 'insert', $clone );
+    });
+    
+
+      $container.isotope({
+        itemSelector : '.eex-element'
+      });
+      
+      $collector.isotope({
+        itemSelector : '.eex-element'
+      });
+      
+      
+      var $optionSets = $('#options .option-set'),
+          $optionLinks = $optionSets.find('a');
+
+      $optionLinks.click(function(){
+        var $this = $(this);
+        // don't proceed if already selected
+        if ( $this.hasClass('selected') ) {
+          return false;
+        }
+        var $optionSet = $this.parents('.option-set');
+        $optionSet.find('.selected').removeClass('selected');
+        $this.addClass('selected');
+  
+        // make option object dynamically, i.e. { filter: '.my-filter-class' }
+        var options = {},
+            key = $optionSet.attr('data-option-key'),
+            value = $this.attr('data-option-value');
+        // parse 'false' as false boolean
+        value = value === 'false' ? false : value;
+        options[ key ] = value;
+        if ( key === 'layoutMode' && typeof changeLayoutMode === 'function' ) {
+          // changes in layout modes need extra logic
+          changeLayoutMode( $this, options )
+        } else {
+          // otherwise, apply new options
+          $container.isotope( options );
+        }
+        
+        return false;
+      });
+
+      
+    });
+  </script>
+  
+
+    
+    <footer>
+      Isotope by <a href="http://desandro.com">David DeSandro</a> / <a href="http://metafizzy.co">Metafizzy</a>
+    </footer>
+    
+  </section> <!-- #content -->
+  
+
+</body>
+</html>
